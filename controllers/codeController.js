@@ -7,7 +7,7 @@ const { CustomError } = require('../utils/errors');
  */
 const convertCode = async (req, res, next) => {
   try {
-    const { sourceCode, sourceLanguage, targetLanguage, preserveComments, optimizeCode } = req.body;
+    const { sourceCode, sourceLanguage, targetLanguage, preserveComments, optimizeCode, userPrompt } = req.body;
     
     logger.info(`Converting code from ${sourceLanguage} to ${targetLanguage}`);
     
@@ -16,7 +16,8 @@ const convertCode = async (req, res, next) => {
       sourceLanguage, 
       targetLanguage, 
       preserveComments, 
-      optimizeCode
+      optimizeCode,
+      userPrompt
     );
     
     return res.status(200).json({
@@ -30,6 +31,7 @@ const convertCode = async (req, res, next) => {
           targetLanguage,
           preserveComments,
           optimizeCode,
+          userPrompt,
           codeLength: sourceCode.length,
           conversionTime: result.conversionTime
         }

@@ -29,20 +29,23 @@ async function convertCodeWithGemini(
   sourceLanguage, 
   targetLanguage, 
   preserveComments = true, 
-  optimizeCode = false
+  optimizeCode = false,
+  userPrompt = ''
 ) {
   const startTime = Date.now();
   
   try {
-    // Source language validation
+    // Source language validation (case-insensitive)
     sourceLanguage = sourceLanguage.toLowerCase();
     if (!Object.keys(SUPPORTED_LANGUAGES).includes(sourceLanguage)) {
       throw new CustomError(`Source language '${sourceLanguage}' is not supported`, 400);
     }
     
-    // Target language validation
-    const normalizedTargetLang = targetLanguage.charAt(0).toUpperCase() + targetLanguage.slice(1).toLowerCase();
-    if (!SUPPORTED_LANGUAGES[sourceLanguage].includes(normalizedTargetLang)) {
+    // Target language validation (case-insensitive)
+    const normalizedTargetLang = targetLanguage.toLowerCase();
+    const supportedTargets = SUPPORTED_LANGUAGES[sourceLanguage].map(lang => lang.toLowerCase());
+    
+    if (!supportedTargets.includes(normalizedTargetLang)) {
       throw new CustomError(`Conversion from '${sourceLanguage}' to '${targetLanguage}' is not supported`, 400);
     }
     
@@ -53,6 +56,7 @@ async function convertCodeWithGemini(
     
     ${preserveComments ? 'Preserve all comments and documentation.' : 'Only include essential comments in the output.'}
     ${optimizeCode ? 'Optimize the code for the target language, using language-specific idioms and best practices.' : 'Keep the code structure as close to the original as possible.'}
+    ${userPrompt ? `Additionally, follow these specific instructions: ${userPrompt}` : ''}
     
     Return the result in this JSON format:
     {

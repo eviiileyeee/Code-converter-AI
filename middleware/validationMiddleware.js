@@ -18,7 +18,10 @@ const conversionSchema = Joi.object({
     'any.required': 'Target language is required'
   }),
   preserveComments: Joi.boolean().default(true),
-  optimizeCode: Joi.boolean().default(false)
+  optimizeCode: Joi.boolean().default(false),
+  userPrompt: Joi.string().allow('').max(1000).messages({
+    'string.max': 'User prompt exceeds maximum length of 1,000 characters'
+  })
 });
 
 /**

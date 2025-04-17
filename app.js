@@ -12,11 +12,18 @@ const codeRoutes = require('./routes/codeRoutes');
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT =  4000;
 
 // Security middleware
 app.use(helmet());
-app.use(cors());
+
+// Parse JSON bodies
+app.use(express.json());
+
+// Development logging
+if (process.env.NODE_ENV !== 'production') {
+  app.use(morgan('dev')); // Simple development logging
+}
 
 // Rate limiting
 const limiter = rateLimit({
@@ -32,9 +39,8 @@ const limiter = rateLimit({
 // Apply rate limiter to all requests
 app.use(limiter);
 
-// Middleware
-app.use(express.json({ limit: '1mb' }));
-app.use(morgan('dev'));
+// Enable CORS
+app.use(cors());
 
 // Routes
 app.use('/api/code', codeRoutes);
@@ -44,16 +50,8 @@ app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok', service: 'code-converter-api' });
 });
 
-// Error handling middleware
+// Error handling
 app.use(errorHandler);
-
-// 404 handler
-app.use((req, res) => {
-  res.status(404).json({ 
-    status: 'error', 
-    message: 'Resource not found' 
-  });
-});
 
 // Start server
 if (process.env.NODE_ENV !== 'test') {
@@ -62,4 +60,4 @@ if (process.env.NODE_ENV !== 'test') {
   });
 }
 
-module.exports = app; // For testing
+module.exports = app;
