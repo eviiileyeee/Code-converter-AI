@@ -1,15 +1,13 @@
 const express = require('express');
 const cors = require('cors');
-const morgan = require('morgan');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
-const dotenv = require('dotenv');
-const { logger } = require('./utils/logger');
+const { requestLogger, logger } = require('./utils/logger');
 const { errorHandler } = require('./middleware/errorHandler');
 const codeRoutes = require('./routes/codeRoutes');
 
 // Load environment variables
-dotenv.config();
+require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -20,20 +18,13 @@ app.use(helmet());
 // Parse JSON bodies
 app.use(express.json());
 
-// Development logging
-if (process.env.NODE_ENV !== 'production') {
-  app.use(morgan('dev')); // Simple development logging
-}
+// Request logging
+app.use(requestLogger);
 
 // Rate limiting
 const limiter = rateLimit({
-  windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000, // 15 minutes by default
-  max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS) || 100, // Limit each IP to 100 requests per window
-  standardHeaders: true,
-  message: {
-    status: 429,
-    message: 'Too many requests, please try again later.'
-  }
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100 // limit each IP to 100 requests per windowMs
 });
 
 // Apply rate limiter to all requests
