@@ -1,5 +1,4 @@
 const { GoogleGenerativeAI } = require('@google/generative-ai');
-const { logger } = require('../utils/logger');
 const { CustomError } = require('../utils/errors');
 require('dotenv').config();
 // Initialize Gemini API
@@ -79,7 +78,6 @@ async function convertCodeWithGemini(
     \`\`\`
     `;
 
-    logger.debug(`Sending code conversion request to Gemini API`);
     
     const result = await model.generateContent(prompt);
     const response = await result.response;
@@ -99,7 +97,6 @@ async function convertCodeWithGemini(
     try {
       parsedResponse = JSON.parse(jsonText);
     } catch (parseError) {
-      logger.error(`Failed to parse Gemini response: ${parseError.message}`);
       throw new CustomError("Failed to parse the AI response", 500);
     }
     
@@ -118,7 +115,6 @@ async function convertCodeWithGemini(
       conversionTime
     };
   } catch (error) {
-    logger.error(`Code conversion error: ${error.message}`);
     
     // Handle API-specific errors
     if (error.response) {

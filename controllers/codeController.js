@@ -1,5 +1,4 @@
 const { convertCodeWithGemini, getSupportedLanguagesList } = require('../services/codeConversionService');
-const { logger } = require('../utils/logger');
 const { CustomError } = require('../utils/errors');
 
 /**
@@ -9,7 +8,6 @@ const convertCode = async (req, res, next) => {
   try {
     const { sourceCode, sourceLanguage, targetLanguage, preserveComments, optimizeCode, userPrompt } = req.body;
     
-    logger.info(`Converting code from ${sourceLanguage} to ${targetLanguage}`);
     
     const result = await convertCodeWithGemini(
       sourceCode, 

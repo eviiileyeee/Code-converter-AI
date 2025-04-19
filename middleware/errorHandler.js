@@ -1,5 +1,4 @@
 // File: middleware/errorHandler.js
-const { logger } = require('../utils/logger');
 const { CustomError } = require('../utils/errors');
 
 /**
@@ -7,7 +6,6 @@ const { CustomError } = require('../utils/errors');
  */
 const errorHandler = (err, req, res, next) => {
   // Log the error
-  logger.error(`Error: ${err.message}`, { stack: err.stack, path: req.path });
   
   // Determine if this is a known error type
   if (err instanceof CustomError) {

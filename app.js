@@ -2,9 +2,11 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 require('dotenv').config();
+const codeRoutes = require('./routes/codeRoutes');
+
 
 const app = express();
-const port = process.env.PORT || 4000;
+const port = process.env.PORT ;
 
 // Security middleware
 app.use(helmet());
@@ -16,7 +18,8 @@ app.use(express.json());
 app.use(cors());
 
 // Routes
-const codeRoutes = require('./routes/code');
+
+
 app.use('/api/code', codeRoutes);
 
 // Health check endpoint
