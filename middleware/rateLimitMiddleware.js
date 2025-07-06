@@ -3,7 +3,7 @@ const rateLimit = require('express-rate-limit');
 // Rate limiter for code conversion - 3 requests per day
 const codeConversionRateLimit = rateLimit({
   windowMs: 24 * 60 * 60 * 1000, // 24 hours in milliseconds
-  max: 3, // limit each IP to 3 requests per windowMs
+  max: 20, // limit each IP to 3 requests per windowMs
   standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
   handler: (req, res) => {
