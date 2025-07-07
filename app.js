@@ -8,6 +8,9 @@ const codeRoutes = require('./routes/codeRoutes');
 const app = express();
 const port = process.env.PORT ;
 
+// Trust proxy for proper IP detection (needed for rate limiting behind proxy)
+app.set('trust proxy', 1);
+
 // Security middleware
 app.use(helmet());
 

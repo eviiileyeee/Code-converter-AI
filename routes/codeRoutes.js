@@ -18,4 +18,11 @@ router.post('/convert', codeConversionRateLimit, addRateLimitInfo, validateConve
  */
 router.get('/supported-languages', codeController.getSupportedLanguages);
 
+/**
+ * @route GET /api/code/rate-limits
+ * @desc Get information about rate limits for code conversion
+ * @access Public
+ */
+router.get('/rate-limits', codeController.getRateLimitInfo);
+
 module.exports = router;
